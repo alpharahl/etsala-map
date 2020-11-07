@@ -1,16 +1,24 @@
 <template>
   <div id="app">
-    <Region/>
+    <JitaRoute/>
   </div>
 </template>
 
 <script>
-import Region from "@/components/Region";
+// import Region from "@/components/Region";
+import JitaRoute from "@/components/JitaRoute";
+import firebase from 'firebase';
 
 export default {
   name: 'App',
   components: {
-    Region,
+    JitaRoute,
+  },
+
+  mounted(){
+    firebase.auth().signInAnonymously().then((user) => {
+      this.$user = user;
+    })
   }
 }
 </script>
