@@ -1,8 +1,9 @@
 <template>
   <div class="region" >
     <h2>{{name}}</h2>
-    <div v-if="!loading">
+    <div v-if="!loading" class="d-flex justify-content-around flex-wrap">
       <Constellation
+        class="constellation mb-3"
         v-for="(constellation, name) in region.constellations"
         :key="name"
         :constellation="constellation"
@@ -55,4 +56,7 @@
 </script>
 
 <style scoped>
+  .constellation{
+    max-width: 400px;
+  }
 </style>

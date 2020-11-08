@@ -1,29 +1,11 @@
 <template>
   <div
     class="d-flex justify-content-center m-2 system-container"
+    :id="name"
   >
-    <b-popover
-      :target="`system-button-${name}`"
-      :title="name"
-      triggers="hover"
-      placement="right"
-      @show="() => {$bus.$emit('highlight', name)}"
-      @hide="() => {$bus.$emit('highlightOff')}"
-    >
-      Can have {{system.trigHoles}} Trig Wormholes.
-      Potential Links:
-      <span
-        v-for="(link, index) in trigConnections"
-        :key="link"
-      >
-        {{link}}
-        <span v-if="index < trigConnections.length - 1">
-          |
-        </span>
-      </span>
-    </b-popover>
     <b-button
       class="system px-2 py-1 d-flex justify-content-center"
+      style="z-index: 2"
       :id="`system-button-${name}`"
       :class="{
         danger,
@@ -33,6 +15,8 @@
         threeTrig: trigConnections.length === 3,
         fourTrig: trigConnections.length > 3,
       }"
+      @mouseenter="highlight=true"
+      @mouseleave="highlight=false"
       @click="() => {$bvModal.show(`${name}-reporter`)}"
     >
       <div
@@ -46,6 +30,17 @@
       </div>
     </b-button>
     <b-modal :id="`${name}-reporter`" :title="`Report ${name}`">
+      <div>
+        <h2>Potential Trig Systems</h2>
+        <ul>
+          <li
+            v-for="(link) in trigConnections"
+            :key="link"
+          >
+            {{link}}
+          </li>
+        </ul>
+      </div>
       <div class="d-flex justify-content-around">
         <b-button
           @click="recordSighting"
@@ -61,6 +56,17 @@
         </b-button>
       </div>
     </b-modal>
+    <svg class="svg" v-if="highlight">
+      <line
+        v-for="(link, index) in links"
+        :key="index"
+        :x1="link.x1"
+        :x2="link.x2"
+        :y1="link.y1"
+        :y2="link.y2"
+        :style="`stroke:rgb(255,0,0);stroke-width:2;z-index:-1;`"
+      />
+    </svg>
   </div>
 </template>
 
@@ -77,6 +83,8 @@
       return {
         lastSeen: null,
         trigConnections: [],
+        links: [],
+        highlight: false
       }
     },
     methods: {
@@ -90,6 +98,26 @@
         firebase.database()
           .ref(`reports/${this.name}/lastSeen`)
           .remove()
+      },
+
+      setupLinks(){
+        const startPos = this.$el.getBoundingClientRect()
+        this.linkedSystems.forEach(systemName => {
+          const targetPoint = document.getElementById(systemName)
+          if (targetPoint){
+            // System is in region
+            const targetPos = targetPoint.getBoundingClientRect();
+            console.log(targetPos, startPos)
+            this.links.push({
+              x1: startPos.x + (startPos.width / 2),
+              x2: targetPos.x + (targetPos.width / 2),
+              y1: startPos.y + (startPos.height / 2),
+              y2: targetPos.y + (targetPos.height / 2),
+            })
+          } else {
+            // system is out of region
+          }
+        })
       }
     },
 
@@ -102,6 +130,10 @@
           return true;
         }
         return false;
+      },
+
+      linkedSystems(){
+        return Object.values(this.system.stargates).map(gate => gate.destination)
       },
 
       oneDecimalSecurity(){
@@ -125,11 +157,27 @@
         const systems = trigInfluence[name];
         return systems.includes(this.name);
       })
+
+      this.$nextTick(() => {
+        // wait until next tick so all items are drawn
+        this.setupLinks();
+      })
     }
   }
 </script>
 
 <style scoped>
+
+  .svg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .security-0{
     color: #920212;
   }
