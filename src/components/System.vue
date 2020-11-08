@@ -3,48 +3,49 @@
     class="d-flex justify-content-center m-2 system-container"
   >
     <b-popover
-      :target="`system-button-${system.name}`"
-      :title="system.name"
+      :target="`system-button-${name}`"
+      :title="name"
       triggers="hover"
       placement="right"
-      @show="() => {$bus.$emit('highlight', system.name)}"
+      @show="() => {$bus.$emit('highlight', name)}"
       @hide="() => {$bus.$emit('highlightOff')}"
     >
       Can have {{system.trigHoles}} Trig Wormholes.
       Potential Links:
       <span
-        v-for="(link, index) in system.trigSystems"
+        v-for="(link, index) in trigConnections"
         :key="link"
       >
         {{link}}
-        <span v-if="index < system.trigSystems.length - 1">
+        <span v-if="index < trigConnections.length - 1">
           |
         </span>
       </span>
     </b-popover>
     <b-button
       class="system px-2 py-1 d-flex justify-content-center"
-      :id="`system-button-${system.name}`"
+      :id="`system-button-${name}`"
       :class="{
         danger,
-        singleTrig: system.trigHoles === 1,
-        twoTrig: system.trigHoles === 2,
-        noTrig: system.trigHoles === 0,
-        threeTrig: system.trigHoles === 3,
+        singleTrig: trigConnections.length === 1,
+        twoTrig: trigConnections.length === 2,
+        noTrig: trigConnections.length === 0,
+        threeTrig: trigConnections.length === 3,
+        fourTrig: trigConnections.length > 3,
       }"
-      @click="() => {$bvModal.show(`${system.name}-reporter`)}"
+      @click="() => {$bvModal.show(`${name}-reporter`)}"
     >
       <div
         class="security mr-auto pr-1"
-        :class="`security-${String(system.security).replace('.', '')}`"
+        :class="`security-${String(oneDecimalSecurity).replace('.', '')}`"
       >
-        {{system.security}}
+        {{oneDecimalSecurity}}
       </div>
       <div>
-        {{system.name}}
+        {{name}}
       </div>
     </b-button>
-    <b-modal :id="`${system.name}-reporter`" :title="`Report ${system.name}`">
+    <b-modal :id="`${name}-reporter`" :title="`Report ${name}`">
       <div class="d-flex justify-content-around">
         <b-button
           @click="recordSighting"
@@ -65,26 +66,29 @@
 
 <script>
   import firebase from 'firebase';
+  import trigInfluence from '@/assets/trigInfluence';
   export default {
     name: "System",
     props: [
       'system',
+      'name'
     ],
     data(){
       return {
         lastSeen: null,
+        trigConnections: [],
       }
     },
     methods: {
       recordSighting(){
         firebase.database()
-          .ref(`reports/${this.system.name}`)
+          .ref(`reports/${this.name}`)
           .update({lastSeen: new Date})
       },
 
       recordClear(){
         firebase.database()
-          .ref(`reports/${this.system.name}/lastSeen`)
+          .ref(`reports/${this.name}/lastSeen`)
           .remove()
       }
     },
@@ -99,11 +103,15 @@
         }
         return false;
       },
+
+      oneDecimalSecurity(){
+        return this.system.security.toFixed(1);
+      }
     },
 
     mounted(){
       firebase.database()
-        .ref(`reports/${this.system.name}`)
+        .ref(`reports/${this.name}`)
         .on('value', (snapshot) => {
           const date = snapshot.val();
           if (date) {
@@ -112,6 +120,11 @@
             this.lastSeen = null;
           }
         })
+
+      this.trigConnections =  Object.keys(trigInfluence).filter(name => {
+        const systems = trigInfluence[name];
+        return systems.includes(this.name);
+      })
     }
   }
 </script>
@@ -180,6 +193,10 @@
   .twoTrig {
     border: 2px #ff9d31 solid;
     box-shadow: 2px 2px 8px #ff9d31;
+  }
+  .fourTrig {
+    border: 2px #ff06d1 solid;
+    box-shadow: 2px 2px 8px #ff06d1;
   }
 
   .threeTrig{
