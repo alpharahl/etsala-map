@@ -105,7 +105,8 @@
             trigHoles: 3,
             trigSystems: [
               'Sakenta',
-              'Otela'
+              'Otela',
+              'Arvasaras',
             ],
           },
           {

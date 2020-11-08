@@ -24,3 +24,5 @@ pnpm-debug.log*
 /.firebaserc
 /.firebase/hosting.ZGlzdA.cache
 /firebase.conf.json
+/scripts/mapData.json
+/scripts/preMapData.json

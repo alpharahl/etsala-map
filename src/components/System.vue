@@ -34,7 +34,10 @@
       }"
       @click="() => {$bvModal.show(`${system.name}-reporter`)}"
     >
-      <div class="security mr-auto pr-1">
+      <div
+        class="security mr-auto pr-1"
+        :class="`security-${String(system.security).replace('.', '')}`"
+      >
         {{system.security}}
       </div>
       <div>
@@ -95,7 +98,7 @@
           return true;
         }
         return false;
-      }
+      },
     },
 
     mounted(){
@@ -103,7 +106,6 @@
         .ref(`reports/${this.system.name}`)
         .on('value', (snapshot) => {
           const date = snapshot.val();
-          console.log(date)
           if (date) {
             this.lastSeen = Date.parse(date.lastSeen);
           } else {
@@ -115,6 +117,50 @@
 </script>
 
 <style scoped>
+  .security-0{
+    color: #920212;
+  }
+
+  .security-01{
+    color: #921b05;
+  }
+
+  .security-02{
+    color: #922d00;
+  }
+
+  .security-03{
+     color: #924208;
+  }
+
+  .security-04{
+    color: #925d05;
+  }
+
+  .security-05{
+    color: #928100;
+  }
+
+  .security-06{
+    color: #6c9205;
+  }
+
+  .security-07{
+    color: #3f9205;
+  }
+
+  .security-08{
+    color: #0a9208;
+  }
+
+  .security-09{
+    color: #0e9249;
+  }
+
+  .security-1{
+    color: #008992;
+  }
+
   .system{
     border-radius: 20px;
     background-color: #ccc;
@@ -143,6 +189,7 @@
 
   .security{
     border-right: 2px solid black;
+    font-weight: 700;
   }
 
 </style>
