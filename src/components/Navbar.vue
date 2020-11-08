@@ -3,7 +3,7 @@
     toggleable="lg"
     type="dark"
   >
-    <b-navbar-brand>Etsala Legion Map</b-navbar-brand>
+    <b-navbar-brand :to="{name: 'Home'}">Etsala Legion Map</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -18,6 +18,7 @@
             {{region}}
           </b-dropdown-item>
         </b-nav-item-dropdown>
+        <b-nav-item :to="{name: 'Reports'}">Reported Systems</b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -77,7 +78,7 @@
           'PureBlind',
           'Querious',
           'ScaldingPass',
-          'SinqLiason',
+          'SinqLaison',
           'Solitude',
           'Stain',
           'Syndicate',

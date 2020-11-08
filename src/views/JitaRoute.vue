@@ -6,6 +6,7 @@
         v-for="system in route"
         :system="system"
         :key="system.name"
+        :name="system.name.replace(' ', '')"
       />
     </div>
   </div>
