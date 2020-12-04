@@ -43,6 +43,20 @@
       }
     },
 
+    computed:{
+      systems(){
+        return Object.values(this.region.constellation).flatMap(constellation => {
+          return Object.keys(constellation.systems).flatMap(systemName => {
+            const system = constellation.systems[systemName]
+            return {
+              ...system,
+              name: systemName
+            }
+          })
+        })
+      }
+    },
+
     mounted(){
       this.loadPage();
     },

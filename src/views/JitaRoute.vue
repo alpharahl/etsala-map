@@ -21,6 +21,30 @@
       return {
         route: [
           {
+            name: 'Mastakomon',
+            security: 0.5,
+            trigHoles: 2,
+            trigSystems: ['Wirashoda', 'Otanuomi'],
+          },
+          {
+            name: 'Uchoshi',
+            security: 0.5,
+            trigHoles: 2,
+            trigSystems: ['Wirashoda', 'Otanuomi'],
+          },
+          {
+            name: 'Vouskiaho',
+            security: 0.5,
+            trigHoles: 2,
+            trigSystems: ['Wirashoda', 'Otanuomi'],
+          },
+          {
+            name: 'Vasala',
+            security: 0.5,
+            trigHoles: 2,
+            trigSystems: ['Wirashoda', 'Otanuomi'],
+          },
+          {
             name: 'Kiainti',
             security: 0.5,
             trigHoles: 1,

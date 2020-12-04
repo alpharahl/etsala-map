@@ -107,7 +107,6 @@
           if (targetPoint){
             // System is in region
             const targetPos = targetPoint.getBoundingClientRect();
-            console.log(targetPos, startPos)
             this.links.push({
               x1: startPos.x + (startPos.width / 2),
               x2: targetPos.x + (targetPos.width / 2),
